@@ -12,15 +12,10 @@ public class SpacePanel extends JPanel {
     // (this can be fixed once 3 body problem is solved)
     private ArrayList<Planet> planets = new ArrayList<>();
 
-    // History of all points visited by planet 0
-    private CopyOnWriteArrayList<Point> history = new CopyOnWriteArrayList<>();
-
     SpacePanel(){
         super();
         planets.add(new Planet(100,10,400,300, 5, 0));
         planets.add(new Planet(100000,100,500,500, 0, 0));
-        history.add(new Point((int)planets.get(0).getX(),(int)planets.get(0).getY()));
-        history.add(new Point((int)planets.get(0).getX(),(int)planets.get(0).getY()));
     }
 
     // Sets component size to value determined here
@@ -35,26 +30,24 @@ public class SpacePanel extends JPanel {
         super.paintComponent(g);
         for (Planet p : planets){
             g.drawOval((int)p.getX()-p.getRad()/2,(int)p.getY()-p.getRad()/2,p.getRad(),p.getRad());
+            for (int i = 1; i < p.getHistory().size(); i++) {
+                CopyOnWriteArrayList<Point> hist = p.getHistory();
+                g.drawLine(hist.get(i - 1).x, hist.get(i - 1).y, hist.get(i).x, hist.get(i).y);
+            }
         }
-        for (int i = 1; i < history.size(); i++){
-            g.drawLine(history.get(i-1).x,history.get(i-1).y,history.get(i).x,history.get(i).y);
-        }
+
     }
 
     // Changes planet's position, velocity, updates path history
     public void updatePlanets(){
-//        for (Planet p : planets){
-//            updateVelocity(p);
-//            p.updatePos();
-//        }
-        history.add(new Point((int)planets.get(0).getX(),(int)planets.get(0).getY()));
-        updateVelocity(planets.get(0));
-        planets.get(0).updatePos();
+        for (Planet p : planets){
+            updateVelocity(p);
+            p.updatePos();
+        }
     }
 
     // changes velocity of planet based on gravitation attraction to other
     // greatly increased gravity strength given smaller scale
-    // TODO: double check the math here
     private void updateVelocity(Planet planet){
         for (Planet p : planets){
             if (p != planet) {
