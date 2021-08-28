@@ -1,0 +1,9 @@
+Stuff TODO
+
+- Separate static "stars" and moving "planets"
+- Click to add stars
+    - Drag to scale
+    - Scale and mass proportional
+- Click to add planets (subclass of stars maybe?)
+    - See stars
+    - Drag back w/ mouse to give velocity

@@ -14,14 +14,15 @@ public class SpacePanel extends JPanel {
 
     SpacePanel(){
         super();
-        planets.add(new Planet(100,10,400,300, 5, 0));
-        planets.add(new Planet(100000,100,500,500, 0, 0));
+        planets.add(new Planet(1000000,50,800,500, 0, 0));
+        planets.add(new Planet(1000000,50,1300,500, 0, 0));
+//        planets.add(new Planet(100,20,800,800, 1.2, 0));
     }
 
     // Sets component size to value determined here
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(1000,1000);
+        return new Dimension(1920,1080);
     }
 
     // Draws each planet's location, lines between each place in planet's historical path
@@ -44,6 +45,8 @@ public class SpacePanel extends JPanel {
             updateVelocity(p);
             p.updatePos();
         }
+//        updateVelocity(planets.get(2));
+//        planets.get(2).updatePos();
     }
 
     // changes velocity of planet based on gravitation attraction to other
