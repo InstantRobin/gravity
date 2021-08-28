@@ -3,6 +3,7 @@ package com.company;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.lang.Math;
 
 public class SpacePanel extends JPanel {
 
@@ -37,9 +38,18 @@ public class SpacePanel extends JPanel {
         }
     }
 
+    // changes velocity of planet based on gravitation attraction to other
+    // greatly increased gravity strength given smaller scale
+    // TODO: double check the math here
     private void updateVelocity(Planet planet){
         for (Planet p : planets){
-            //stub
+            if (p != planet) {
+                double dist = Math.sqrt(Math.pow(planet.getX()+p.getX(),2) +
+                        Math.pow(planet.getY()+p.getY(),2));
+                double acc = 0.06674 * p.getMass() / Math.pow(dist,2);
+                planet.setDx((int)(planet.getDx() + Math.cos(acc)));
+                planet.setDy((int)(planet.getDy() + Math.sin(acc)));
+            }
         }
     }
 
