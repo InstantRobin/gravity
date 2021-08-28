@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         JFrame frame = new JFrame("Gravity");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -14,6 +14,12 @@ public class Main {
 
         frame.pack();
         frame.setVisible(true);
+
+        while(true){
+            space.updatePlanets();
+            space.repaint();
+            Thread.sleep(1);
+        }
 
     }
 }

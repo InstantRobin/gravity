@@ -13,8 +13,8 @@ public class SpacePanel extends JPanel {
 
     SpacePanel(){
         super();
-        planets.add(new Planet(50,50,100,100, 10, 0));
-        planets.add(new Planet(100,75,200,300, 0, 0));
+        planets.add(new Planet(100,10,100,100, 1, 0));
+        planets.add(new Planet(100000,100,300,200, 0, 0));
     }
 
     // Sets component size to value determined here
@@ -32,10 +32,12 @@ public class SpacePanel extends JPanel {
     }
 
     public void updatePlanets(){
-        for (Planet p : planets){
+//        for (Planet p : planets){
 //            updateVelocity(p);
-            p.updatePos();
-        }
+//            p.updatePos();
+//        }
+        updateVelocity(planets.get(0));
+        planets.get(0).updatePos();
     }
 
     // changes velocity of planet based on gravitation attraction to other
@@ -44,11 +46,12 @@ public class SpacePanel extends JPanel {
     private void updateVelocity(Planet planet){
         for (Planet p : planets){
             if (p != planet) {
-                double dist = Math.sqrt(Math.pow(planet.getX()+p.getX(),2) +
-                        Math.pow(planet.getY()+p.getY(),2));
-                double acc = 0.06674 * p.getMass() / Math.pow(dist,2);
-                planet.setDx((int)(planet.getDx() + Math.cos(acc)));
-                planet.setDy((int)(planet.getDy() + Math.sin(acc)));
+                double dist = Math.sqrt(Math.pow(planet.getX()-p.getX(),2) +
+                        Math.pow(planet.getY()-p.getY(),2));
+                double angle = Math.atan2((p.getY() - planet.getY()),(p.getX() - planet.getX()));
+                double acc = .0006674 * p.getMass() / Math.pow(dist,2);
+                planet.setDx(planet.getDx() + acc * Math.cos(angle));
+                planet.setDy(planet.getDy() + acc * Math.sin(angle));
             }
         }
     }

@@ -6,10 +6,10 @@ public class Planet {
     private int radius;
     private int x;
     private int y;
-    private int dx;
-    private int dy;
+    private double dx;
+    private double dy;
 
-    Planet(int mass, int radius, int x, int y, int dx, int dy){
+    Planet(int mass, int radius, int x, int y, double dx, double dy){
         this.mass = mass;
         this.radius = radius;
         this.x = x;
@@ -47,19 +47,19 @@ public class Planet {
         this.y = y;
     }
 
-    public int getDx() {
+    public double getDx() {
         return dx;
     }
 
-    public void setDx(int dx) {
+    public void setDx(double dx) {
         this.dx = dx;
     }
 
-    public int getDy() {
+    public double getDy() {
         return dy;
     }
 
-    public void setDy(int dy) {
+    public void setDy(double dy) {
         this.dy = dy;
     }
 }
