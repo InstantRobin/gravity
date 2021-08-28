@@ -18,6 +18,11 @@ public class Planet {
         this.dy = dy;
     }
 
+    public void updatePos(){
+        x += dx;
+        y += dy;
+    }
+
     public int getMass() {
         return mass;
     }

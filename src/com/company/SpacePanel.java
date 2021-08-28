@@ -33,8 +33,8 @@ public class SpacePanel extends JPanel {
 
     public void updatePlanets(){
         for (Planet p : planets){
-            updateVelocity(p);
-            updatePosition();
+//            updateVelocity(p);
+            p.updatePos();
         }
     }
 
@@ -50,12 +50,6 @@ public class SpacePanel extends JPanel {
                 planet.setDx((int)(planet.getDx() + Math.cos(acc)));
                 planet.setDy((int)(planet.getDy() + Math.sin(acc)));
             }
-        }
-    }
-
-    private void updatePosition(){
-        for (Planet p : planets){
-            //stub
         }
     }
 }
