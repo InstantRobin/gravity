@@ -18,7 +18,7 @@ public class Main {
         while(true){
             space.updatePlanets();
             space.repaint();
-            Thread.sleep(1);
+            Thread.sleep(10);
         }
 
     }

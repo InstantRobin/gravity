@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.lang.Math;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SpacePanel extends JPanel {
 
@@ -11,31 +12,42 @@ public class SpacePanel extends JPanel {
     // (this can be fixed once 3 body problem is solved)
     private ArrayList<Planet> planets = new ArrayList<>();
 
+    // History of all points visited by planet 0
+    private CopyOnWriteArrayList<Point> history = new CopyOnWriteArrayList<>();
+
     SpacePanel(){
         super();
-        planets.add(new Planet(100,10,100,100, 1, 0));
-        planets.add(new Planet(100000,100,300,200, 0, 0));
+        planets.add(new Planet(100,10,400,300, 5, 0));
+        planets.add(new Planet(100000,100,500,500, 0, 0));
+        history.add(new Point((int)planets.get(0).getX(),(int)planets.get(0).getY()));
+        history.add(new Point((int)planets.get(0).getX(),(int)planets.get(0).getY()));
     }
 
     // Sets component size to value determined here
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(500,500);
+        return new Dimension(1000,1000);
     }
 
+    // Draws each planet's location, lines between each place in planet's historical path
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         for (Planet p : planets){
-            g.drawOval(p.getX(),p.getY(),p.getRad(),p.getRad());
+            g.drawOval((int)p.getX()-p.getRad()/2,(int)p.getY()-p.getRad()/2,p.getRad(),p.getRad());
+        }
+        for (int i = 1; i < history.size(); i++){
+            g.drawLine(history.get(i-1).x,history.get(i-1).y,history.get(i).x,history.get(i).y);
         }
     }
 
+    // Changes planet's position, velocity, updates path history
     public void updatePlanets(){
 //        for (Planet p : planets){
 //            updateVelocity(p);
 //            p.updatePos();
 //        }
+        history.add(new Point((int)planets.get(0).getX(),(int)planets.get(0).getY()));
         updateVelocity(planets.get(0));
         planets.get(0).updatePos();
     }
@@ -49,7 +61,7 @@ public class SpacePanel extends JPanel {
                 double dist = Math.sqrt(Math.pow(planet.getX()-p.getX(),2) +
                         Math.pow(planet.getY()-p.getY(),2));
                 double angle = Math.atan2((p.getY() - planet.getY()),(p.getX() - planet.getX()));
-                double acc = .0006674 * p.getMass() / Math.pow(dist,2);
+                double acc = .06674 * p.getMass() / Math.pow(dist,2);
                 planet.setDx(planet.getDx() + acc * Math.cos(angle));
                 planet.setDy(planet.getDy() + acc * Math.sin(angle));
             }
