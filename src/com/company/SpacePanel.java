@@ -7,13 +7,22 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SpacePanel extends JPanel {
 
-    // As long as satellites have gravity towards one another, max of 2 satellites allowed in array
-    // (this can be fixed once 3 body problem is solved)
+    // Arrays of stars and satellites to be rendered
     private ArrayList<Satellite> satellites = new ArrayList<>();
     private ArrayList<Star> stars = new ArrayList<>();
 
+    // Temporary, used when previewing a star or satellite during mouse-drag creation
+    private int tempVal = 0; /* Preview render state (according to mouse press)
+                                0: Not previewing
+                                1: Satellite preview (satellite + velocity vector)
+                                3: Star preview
+                             */
+    private GravBod tempBod; // GravBod preview to be rendered
+    private Point[] tempLn = new Point[2];
+
     SpacePanel(){
         super();
+        // Example stars / satellites:
 //        stars.add(new Star(300,500, 50, Color.orange, 1000000));
 //        stars.add(new Star(1200,500, 50, Color.cyan, 1000000));
 //        satellites.add(new Satellite(800,500,10,Color.red, 9, -9));
@@ -37,6 +46,7 @@ public class SpacePanel extends JPanel {
         for (Star s : stars) {
             drawGravBod(g,s);
         }
+        renderTemp(g);
     }
 
     // Renders a gravitational body as a colored oval centered body's at x and y coords
@@ -72,5 +82,35 @@ public class SpacePanel extends JPanel {
     // Creates a star, mass is proportional to radius
     public void addStar(double x, double y, Color color, int rad){
         stars.add(new Star(x,y, rad, color, rad*20000));
+    }
+
+    // Stores a temporary GravBod to be rendered as a preview
+    public void setTempBod(GravBod tempBod) {
+        this.tempBod = tempBod;
+    }
+
+    // Renders the GravBod stored in preview, if left click, renders line stored in preview first
+    public void renderTemp(Graphics g){
+        switch(tempVal){
+            case 0:
+                break;
+            case 1:
+                g.setColor(tempBod.getColor());
+                g.drawLine(tempLn[0].x,tempLn[0].y,tempLn[1].x,tempLn[1].y);
+                g.setColor(Color.white);
+            case 3:
+                drawGravBod(g, tempBod);
+                break;
+        }
+    }
+
+    // Sets current preview state
+    public void setTempVal(int tempVal) {
+        this.tempVal = tempVal;
+    }
+
+    // Sets coordinates of preview line
+    public void setTempLn(Point[] tempLn) {
+        this.tempLn = tempLn;
     }
 }
