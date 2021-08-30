@@ -1,6 +1,6 @@
 Stuff TODO
 
-- Separate static "stars" and moving "planets"
+- Separate static "stars" and moving "satellites" ✅
 - Click to add stars
     - Drag to scale
     - Scale and mass proportional

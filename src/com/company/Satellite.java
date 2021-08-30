@@ -12,8 +12,8 @@ public class Satellite extends GravBod {
     protected double dx;
     protected double dy;
 
-    Satellite(int x, int y, int radius, double dx, double dy){
-        super(x, y, radius);
+    Satellite(int x, int y, int radius, Color color, double dy, double dx){
+        super(x, y, radius, color);
         this.dx = dx;
         this.dy = dy;
         history.add(new Point(x, y));

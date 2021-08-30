@@ -1,6 +1,7 @@
 package com.company;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
 
@@ -14,11 +15,12 @@ public class Main {
 
         frame.pack();
         frame.setVisible(true);
+        space.setBackground(Color.black);
 
         while(true){
             space.updateSatellites();
             space.repaint();
-            Thread.sleep(1);
+            Thread.sleep(10);
         }
 
     }

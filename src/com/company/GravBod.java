@@ -1,16 +1,20 @@
 package com.company;
 
+import java.awt.*;
+
 // Short for Gravitational Body
 // Represents an object that experiences the pull of gravity
 public class GravBod {
     protected int radius;
     protected double x;
     protected double y;
+    protected Color color;
 
-    public GravBod(int x, int y, int radius) {
+    public GravBod(int x, int y, int radius, Color color) {
         this.radius = radius;
         this.x = x;
         this.y = y;
+        this.color = color;
     }
 
     public int getRad() {
@@ -33,4 +37,11 @@ public class GravBod {
         this.y = y;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
 }
