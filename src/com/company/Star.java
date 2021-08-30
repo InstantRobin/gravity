@@ -8,7 +8,7 @@ public class Star extends GravBod{
 
     private int mass;
 
-    public Star(int x, int y, Color color, int radius, int mass) {
+    public Star(int x, int y, int radius, Color color, int mass) {
         super(x, y, radius, color);
         this.mass = mass;
     }

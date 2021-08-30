@@ -15,6 +15,7 @@ public class Main {
 
         frame.pack();
         frame.setVisible(true);
+        frame.getContentPane().addMouseListener(new ClickListener(space));
         space.setBackground(Color.black);
 
         while(true){

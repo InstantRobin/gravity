@@ -14,10 +14,10 @@ public class SpacePanel extends JPanel {
 
     SpacePanel(){
         super();
-        stars.add(new Star(300,500,Color.orange,50,1000000));
-        stars.add(new Star(1200,500,Color.cyan,50,1000000));
-        satellites.add(new Satellite(800,500,10,Color.red, 9, -9));
-        satellites.add(new Satellite(800,500,10,Color.green, -11, 10));
+//        stars.add(new Star(300,500, 50, Color.orange, 1000000));
+//        stars.add(new Star(1200,500, 50, Color.cyan, 1000000));
+//        satellites.add(new Satellite(800,500,10,Color.red, 9, -9));
+//        satellites.add(new Satellite(800,500,10,Color.green, -11, 10));
     }
 
     // Sets component size to value determined here
@@ -62,5 +62,13 @@ public class SpacePanel extends JPanel {
             p.updateVelocity(stars);
             p.updatePos();
         }
+    }
+
+    public void addSat(int x, int y, Color color, double dx, double dy){
+        satellites.add(new Satellite(x,y,10,color,dx,dy));
+    }
+
+    public void addStar(int x, int y, Color color, int mass){
+        stars.add(new Star(x,y, 50, color, mass));
     }
 }
