@@ -113,4 +113,12 @@ public class SpacePanel extends JPanel {
     public void setTempLn(Point[] tempLn) {
         this.tempLn = tempLn;
     }
+
+    public void clearStars(){
+        stars = new ArrayList<>();
+    }
+
+    public void clearSatellites(){
+        satellites = new ArrayList<>();
+    }
 }

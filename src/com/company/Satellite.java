@@ -29,6 +29,9 @@ public class Satellite extends GravBod {
     public void updatePos() {
         x += dx;
         y += dy;
+        if (history.size() > 50) {
+            history.remove(0);
+        }
         history.add(new Point((int) x, (int) y));
     }
 

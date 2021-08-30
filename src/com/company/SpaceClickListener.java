@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 // Handles mouse creation of stars and satellites
-public class ClickListener extends MouseInputAdapter {
+public class SpaceClickListener extends MouseInputAdapter {
 
     private final SpacePanel panel;
     private Color color;
@@ -15,7 +15,7 @@ public class ClickListener extends MouseInputAdapter {
     private int button;
     Point[] line = new Point[2];
 
-    ClickListener(SpacePanel panel){
+    SpaceClickListener(SpacePanel panel){
         this.panel = panel;
     }
 
