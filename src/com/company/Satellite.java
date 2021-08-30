@@ -4,6 +4,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+// Represents a body that experiences gravity but does not exert it
+// Moves according to path of gravity
 public class Satellite extends GravBod {
 
     // History of all points visited by planet

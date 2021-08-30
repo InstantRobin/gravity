@@ -2,6 +2,8 @@ package com.company;
 
 import java.awt.*;
 
+// Represents an object that exerts gravity
+// Stationary
 public class Star extends GravBod{
 
     private int mass;
