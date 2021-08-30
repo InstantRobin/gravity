@@ -2,8 +2,8 @@ Stuff TODO
 
 - Separate static "stars" and moving "satellites" ✅
 - Click to add stars
-    - Drag to scale
-    - Scale and mass proportional
-- Click to add planets (subclass of stars maybe?)
-    - See stars
-    - Drag back w/ mouse to give velocity
+    - Drag to scale ✅
+    - Scale and mass proportional ✅
+- Click to add satellites
+    - (See stars) ✅
+    - Drag back w/ mouse to give velocity ✅

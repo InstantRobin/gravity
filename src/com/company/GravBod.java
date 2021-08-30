@@ -10,11 +10,15 @@ public class GravBod {
     protected double y;
     protected Color color;
 
-    public GravBod(int x, int y, int radius, Color color) {
+    public GravBod(double x, double y, int radius, Color color) {
         this.radius = radius;
         this.x = x;
         this.y = y;
         this.color = color;
+    }
+
+    public void setRad(int radius) {
+        this.radius = radius;
     }
 
     public int getRad() {

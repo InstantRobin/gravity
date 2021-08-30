@@ -14,12 +14,12 @@ public class Satellite extends GravBod {
     protected double dx;
     protected double dy;
 
-    Satellite(int x, int y, int radius, Color color, double dy, double dx){
+    Satellite(double x, double y, int radius, Color color, double dy, double dx){
         super(x, y, radius, color);
         this.dx = dx;
         this.dy = dy;
-        history.add(new Point(x, y));
-        history.add(new Point(x, y));
+        history.add(new Point((int)x, (int)y));
+        history.add(new Point((int)x, (int)y));
     }
 
     public CopyOnWriteArrayList<Point> getHistory() {

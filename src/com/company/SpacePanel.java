@@ -40,11 +40,11 @@ public class SpacePanel extends JPanel {
     }
 
     // Renders a gravitational body as a colored oval centered body's at x and y coords
-    private void drawGravBod(Graphics g, GravBod bod){
+    public void drawGravBod(Graphics g, GravBod bod){
         int rad = bod.getRad();
         g.setColor(bod.getColor());
         g.fillOval((int) (bod.getX()-rad), (int) (bod.getY()-rad),2*rad,2*rad);
-        g.setColor(Color.black);
+        g.setColor(Color.white);
     }
 
     // Draws ever position a given satellite has visited in satellite's color
@@ -64,11 +64,13 @@ public class SpacePanel extends JPanel {
         }
     }
 
-    public void addSat(int x, int y, Color color, double dx, double dy){
+    // Creates a satellite
+    public void addSat(double x, double y, Color color, double dx, double dy){
         satellites.add(new Satellite(x,y,10,color,dx,dy));
     }
 
-    public void addStar(int x, int y, Color color, int mass){
-        stars.add(new Star(x,y, 50, color, mass));
+    // Creates a star, mass is proportional to radius
+    public void addStar(double x, double y, Color color, int rad){
+        stars.add(new Star(x,y, rad, color, rad*20000));
     }
 }
