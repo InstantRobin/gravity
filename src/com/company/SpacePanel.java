@@ -15,9 +15,9 @@ public class SpacePanel extends JPanel {
 
     SpacePanel(){
         super();
-        stars.add(new Star(300,500,25,10000));
-        stars.add(new Star(1200,500,25,10000));
-        satellites.add(new Satellite(800,500,10,-1,1));
+        stars.add(new Star(300,500,25,2000000));
+        stars.add(new Star(1200,500,25,1000000));
+        satellites.add(new Satellite(800,500,10,-10,10));
     }
 
     // Sets component size to value determined here
@@ -52,21 +52,8 @@ public class SpacePanel extends JPanel {
     // Changes satellite's position, velocity, updates path history
     public void updateSatellites(){
         for (Satellite p : satellites){
-            updateVelocity(p);
+            p.updateVelocity(stars);
             p.updatePos();
-        }
-    }
-
-    // changes velocity of satellite based on gravitation attraction to other
-    // greatly increased gravity strength given smaller scale
-    private void updateVelocity(Satellite satellite){
-        for (Star star : stars){
-            double dist = Math.sqrt(Math.pow(satellite.getX()-star.getX(),2) +
-                    Math.pow(satellite.getY()-star.getY(),2));
-            double angle = Math.atan2((star.getY() - satellite.getY()),(star.getX() - satellite.getX()));
-            double acc = .06674 * star.getMass() / Math.pow(dist,2);
-            satellite.setDx(satellite.getDx() + acc * Math.cos(angle));
-            satellite.setDy(satellite.getDy() + acc * Math.sin(angle));
         }
     }
 }

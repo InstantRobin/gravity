@@ -1,6 +1,7 @@
 package com.company;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Satellite extends GravBod {
@@ -27,6 +28,19 @@ public class Satellite extends GravBod {
         x += dx;
         y += dy;
         history.add(new Point((int) x, (int) y));
+    }
+
+    // changes velocity of satellite based on gravitation attraction to other
+    // greatly increased gravity strength given smaller scale
+    public void updateVelocity(ArrayList<Star> stars){
+        for (Star star : stars){
+            double dist = Math.sqrt(Math.pow(x-star.getX(),2) +
+                    Math.pow(y-star.getY(),2));
+            double angle = Math.atan2((star.getY() - y),(star.getX() - x));
+            double acc = .06674 * star.getMass() / Math.pow(dist,2);
+            dx = (dx + acc * Math.cos(angle));
+            dy = (dy + acc * Math.sin(angle));
+        }
     }
 
     public double getDx() {
