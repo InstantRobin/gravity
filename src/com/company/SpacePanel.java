@@ -8,15 +8,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SpacePanel extends JPanel {
 
-    // As long as planets have gravity towards one another, max of 2 planets allowed in array
+    // As long as satellites have gravity towards one another, max of 2 satellites allowed in array
     // (this can be fixed once 3 body problem is solved)
-    private ArrayList<Planet> planets = new ArrayList<>();
+    private ArrayList<Satellite> satellites = new ArrayList<>();
+    private ArrayList<Star> stars = new ArrayList<>();
 
     SpacePanel(){
         super();
-        planets.add(new Planet(1000000,50,800,500, 0, 0));
-        planets.add(new Planet(1000000,50,1300,500, 0, 0));
-//        planets.add(new Planet(100,20,800,800, 1.2, 0));
+        stars.add(new Star(300,500,25,10000));
+        stars.add(new Star(1200,500,25,10000));
+        satellites.add(new Satellite(800,500,10,-1,1));
     }
 
     // Sets component size to value determined here
@@ -25,42 +26,47 @@ public class SpacePanel extends JPanel {
         return new Dimension(1920,1080);
     }
 
-    // Draws each planet's location, lines between each place in planet's historical path
+    // Draws each satellite's location, lines between each place in satellite's historical path
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        for (Planet p : planets){
-            g.drawOval((int)p.getX()-p.getRad()/2,(int)p.getY()-p.getRad()/2,p.getRad(),p.getRad());
+        for (Satellite p : satellites){
+            drawGravBod(g,p);
             for (int i = 1; i < p.getHistory().size(); i++) {
                 CopyOnWriteArrayList<Point> hist = p.getHistory();
                 g.drawLine(hist.get(i - 1).x, hist.get(i - 1).y, hist.get(i).x, hist.get(i).y);
             }
         }
+        for (Star s : stars) {
+            drawGravBod(g,s);
+        }
 
     }
 
-    // Changes planet's position, velocity, updates path history
-    public void updatePlanets(){
-        for (Planet p : planets){
+    // Renders a gravitational body as an oval centered at x and y coords
+    private void drawGravBod(Graphics g, GravBod bod){
+        int r = bod.getRad();
+        g.drawOval((int)bod.getX()-r,(int)bod.getY()-r,2*r,2*r);
+    }
+
+    // Changes satellite's position, velocity, updates path history
+    public void updateSatellites(){
+        for (Satellite p : satellites){
             updateVelocity(p);
             p.updatePos();
         }
-//        updateVelocity(planets.get(2));
-//        planets.get(2).updatePos();
     }
 
-    // changes velocity of planet based on gravitation attraction to other
+    // changes velocity of satellite based on gravitation attraction to other
     // greatly increased gravity strength given smaller scale
-    private void updateVelocity(Planet planet){
-        for (Planet p : planets){
-            if (p != planet) {
-                double dist = Math.sqrt(Math.pow(planet.getX()-p.getX(),2) +
-                        Math.pow(planet.getY()-p.getY(),2));
-                double angle = Math.atan2((p.getY() - planet.getY()),(p.getX() - planet.getX()));
-                double acc = .06674 * p.getMass() / Math.pow(dist,2);
-                planet.setDx(planet.getDx() + acc * Math.cos(angle));
-                planet.setDy(planet.getDy() + acc * Math.sin(angle));
-            }
+    private void updateVelocity(Satellite satellite){
+        for (Star star : stars){
+            double dist = Math.sqrt(Math.pow(satellite.getX()-star.getX(),2) +
+                    Math.pow(satellite.getY()-star.getY(),2));
+            double angle = Math.atan2((star.getY() - satellite.getY()),(star.getX() - satellite.getX()));
+            double acc = .06674 * star.getMass() / Math.pow(dist,2);
+            satellite.setDx(satellite.getDx() + acc * Math.cos(angle));
+            satellite.setDy(satellite.getDy() + acc * Math.sin(angle));
         }
     }
 }

@@ -16,9 +16,9 @@ public class Main {
         frame.setVisible(true);
 
         while(true){
-            space.updatePlanets();
+            space.updateSatellites();
             space.repaint();
-            Thread.sleep(10);
+            Thread.sleep(1);
         }
 
     }
