@@ -2,14 +2,16 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Main {
 
     private static JFrame frame;
     private static GridBagConstraints c;
+    private static final int fps = 75;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args){
 
         // Set up basic window, uses GridBagLayout
         frame = new JFrame("Gravity");
@@ -51,12 +53,13 @@ public class Main {
         // Set cool space background color
         space.setBackground(Color.black);
 
-        // TODO: Implement better fps limiting, this is really not a great method
-        while(true){
+
+        Timer timer = new Timer(1000/fps, e -> {
             space.updateSatellites();
             space.repaint();
-            Thread.sleep(10);
-        }
+        });
+        
+        timer.start();
     }
     
     // Places button sequentially at top of screen
