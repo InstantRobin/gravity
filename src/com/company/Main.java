@@ -7,40 +7,51 @@ import java.awt.event.ActionListener;
 public class Main {
 
     private static JFrame frame;
+    private static GridBagConstraints c;
 
     public static void main(String[] args) throws InterruptedException {
 
+        // Set up basic window, uses GridBagLayout
         frame = new JFrame("Gravity");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        frame.setLayout(new GridBagLayout());
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+    
         SpacePanel space = new SpacePanel();
-
-        JButton clStarButton = new JButton();
-        clStarButton.setText("Clear Stars");
-        JButton clSatButton = new JButton();
-        clSatButton.setText("Clear Satellites");
-        JButton clAllButton = new JButton();
-        clAllButton.setText("Clear All");
-
-        clStarButton.addActionListener(e -> space.clearStars());
-        clSatButton.addActionListener(e -> space.clearSatellites());
-        clAllButton.addActionListener(e -> {
+        
+        // Create clear element buttons, to be placed at top of screen
+        addButton("Clear Stars",e -> space.clearStars());
+        addButton("Clear Satellites",e -> space.clearSatellites());
+        addButton("Clear All",e -> {
             space.clearSatellites();
             space.clearStars();
         });
 
-        frame.add(clSatButton,BorderLayout.PAGE_START);
-        frame.add(clStarButton,BorderLayout.PAGE_START);
-        frame.add(clAllButton,BorderLayout.PAGE_START);
-        frame.add(space,BorderLayout.CENTER);
+        // Set up constraints to allow Space to fill up rest of screen
+        c.fill = GridBagConstraints.BOTH;
+        c.gridwidth = 3;
+        c.weighty = 1;
+        c.gridx = 0;
+        c.gridy = 1;
+        frame.add(space,c);
 
         frame.pack();
         frame.setVisible(true);
+        // Maximize window
+        frame.setExtendedState(frame.getExtendedState()| JFrame.MAXIMIZED_BOTH);
+        
+        // Enables mouse interaction
         SpaceClickListener listener = new SpaceClickListener(space);
-        frame.getContentPane().addMouseListener(listener);
-        frame.getContentPane().addMouseMotionListener(listener);
+        space.addMouseListener(listener);
+        space.addMouseMotionListener(listener);
+        
+        // Set cool space background color
         space.setBackground(Color.black);
 
+        // TODO: Implement better fps limiting, this is really not a great method
         while(true){
             space.updateSatellites();
             space.repaint();
@@ -48,10 +59,18 @@ public class Main {
         }
     }
     
-    void addButton(String str, ActionListener listener){
+    // Places button sequentially at top of screen
+    // Note: Only works properly if things have only been added to top row
+    private static void addButton(String str, ActionListener listener){
         JButton button = new JButton();
         button.setText(str);
         button.addActionListener(listener);
-        frame.add(button,BorderLayout.PAGE_START);
+    
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 0.5;
+        c.gridx = frame.getContentPane().getComponentCount();
+        c.gridy = 0;
+        
+        frame.add(button,c);
     }
 }
