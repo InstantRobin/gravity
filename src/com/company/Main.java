@@ -2,14 +2,15 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Main {
 
+    private static JFrame frame;
+
     public static void main(String[] args) throws InterruptedException {
 
-        JFrame frame = new JFrame("Gravity");
+        frame = new JFrame("Gravity");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         SpacePanel space = new SpacePanel();
@@ -20,7 +21,6 @@ public class Main {
         clSatButton.setText("Clear Satellites");
         JButton clAllButton = new JButton();
         clAllButton.setText("Clear All");
-        frame.add(clAllButton,BorderLayout.PAGE_START);
 
         clStarButton.addActionListener(e -> space.clearStars());
         clSatButton.addActionListener(e -> space.clearSatellites());
@@ -46,6 +46,12 @@ public class Main {
             space.repaint();
             Thread.sleep(10);
         }
-
+    }
+    
+    void addButton(String str, ActionListener listener){
+        JButton button = new JButton();
+        button.setText(str);
+        button.addActionListener(listener);
+        frame.add(button,BorderLayout.PAGE_START);
     }
 }
