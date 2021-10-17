@@ -51,14 +51,14 @@ public class SpaceClickListener extends MouseInputAdapter {
             // Stores points for movement vector
             line[0] = new Point(x,y);
             line[1] = new Point(x,y);
-            panel.setTempLn(line);
-            panel.setTempBod(bod);
-            panel.setTempVal(1);
+            panel.setVLine(line);
+            panel.setPreviewBod(bod);
+            panel.setPreviewRenderState(1);
             button = MouseEvent.BUTTON1; // so mouseDragged knows which action is being taken
         } else if (e.getButton() == MouseEvent.BUTTON3) {
             bod = new Star(x, y, 0, color, 0);
-            panel.setTempBod(bod);
-            panel.setTempVal(3);
+            panel.setPreviewBod(bod);
+            panel.setPreviewRenderState(3);
             button = MouseEvent.BUTTON3;
         }
     }
@@ -84,7 +84,7 @@ public class SpaceClickListener extends MouseInputAdapter {
         } else if (button == MouseEvent.BUTTON3) {
            panel.addStar(bod.getX(),bod.getY(),bod.getColor(),bod.getRad());
         }
-        panel.setTempVal(0);
+        panel.setPreviewRenderState(0);
         button = 0;
     }
 }

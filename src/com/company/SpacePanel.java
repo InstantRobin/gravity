@@ -12,13 +12,15 @@ public class SpacePanel extends JPanel {
     private ArrayList<Star> stars = new ArrayList<>();
 
     // Temporary, used when previewing a star or satellite during mouse-drag creation
-    private int tempVal = 0; /* Preview render state (according to mouse press)
+    private int previewRenderState = 0; /* Preview render state (according to mouse press)
                                 0: Not previewing
                                 1: Satellite preview (satellite + velocity vector)
                                 3: Star preview
                              */
-    private GravBod tempBod; // GravBod preview to be rendered
-    private Point[] tempLn = new Point[2];
+    // GravBod preview to be rendered when creating GravBods
+    private GravBod previewBod;
+    // Velocity line, used to preview velocity when creating Satellites
+    private Point[] vLine = new Point[2];
 
     SpacePanel(){
         super();
@@ -46,7 +48,7 @@ public class SpacePanel extends JPanel {
         for (Star s : stars) {
             drawGravBod(g,s);
         }
-        renderTemp(g);
+        renderPreview(g);
     }
 
     // Renders a gravitational body as a colored oval centered body's at x and y coords
@@ -85,33 +87,35 @@ public class SpacePanel extends JPanel {
     }
 
     // Stores a temporary GravBod to be rendered as a preview
-    public void setTempBod(GravBod tempBod) {
-        this.tempBod = tempBod;
+    public void setPreviewBod(GravBod previewBod) {
+        this.previewBod = previewBod;
     }
 
     // Renders the GravBod stored in preview, if left click, renders line stored in preview first
-    public void renderTemp(Graphics g){
-        switch(tempVal){
+    public void renderPreview(Graphics g){
+        switch(previewRenderState){
             case 0:
                 break;
             case 1:
-                g.setColor(tempBod.getColor());
-                g.drawLine(tempLn[0].x,tempLn[0].y,tempLn[1].x,tempLn[1].y);
+                // Renders Satellite and Velocity Line preview based on mouse location
+                g.setColor(previewBod.getColor());
+                g.drawLine(vLine[0].x, vLine[0].y, vLine[1].x, vLine[1].y);
                 g.setColor(Color.white);
             case 3:
-                drawGravBod(g, tempBod);
+                // Renders Star
+                drawGravBod(g, previewBod);
                 break;
         }
     }
 
     // Sets current preview state
-    public void setTempVal(int tempVal) {
-        this.tempVal = tempVal;
+    public void setPreviewRenderState(int previewRenderState) {
+        this.previewRenderState = previewRenderState;
     }
 
     // Sets coordinates of preview line
-    public void setTempLn(Point[] tempLn) {
-        this.tempLn = tempLn;
+    public void setVLine(Point[] tempLn) {
+        this.vLine = tempLn;
     }
 
     public void clearStars(){
