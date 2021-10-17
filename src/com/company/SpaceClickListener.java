@@ -80,7 +80,7 @@ public class SpaceClickListener extends MouseInputAdapter {
     @Override
     public void mouseReleased(MouseEvent e){
         if (button == MouseEvent.BUTTON1) {
-            panel.addSat(bod.getX(),bod.getY(),color,-((float)(e.getY()-y))/10,-((float)(e.getX()-x))/10);
+            panel.addSat(bod.getX(),bod.getY(),color,-((float)(e.getY()-y))/5,-((float)(e.getX()-x))/5);
         } else if (button == MouseEvent.BUTTON3) {
            panel.addStar(bod.getX(),bod.getY(),bod.getColor(),bod.getRad());
         }

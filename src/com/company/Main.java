@@ -2,14 +2,13 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Main {
 
     private static JFrame frame;
     private static GridBagConstraints c;
-    private static final int fps = 75;
+    private static final int fps = 100;
 
     public static void main(String[] args){
 

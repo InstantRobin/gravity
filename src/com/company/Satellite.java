@@ -1,6 +1,7 @@
 package com.company;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -13,8 +14,8 @@ public class Satellite extends GravBod {
 
     protected double dx;
     protected double dy;
-
-    Satellite(double x, double y, int radius, Color color, double dy, double dx){
+    
+    Satellite(double x, double y, int radius, Color color, double dx, double dy){
         super(x, y, radius, color);
         this.dx = dx;
         this.dy = dy;
@@ -26,9 +27,39 @@ public class Satellite extends GravBod {
         return history;
     }
 
-    public void updatePos() {
+    public void updatePos(ArrayList<Star> stars) {
         x += dx;
         y += dy;
+        
+        // Checks to make sure doesn't clip inside of stars, allows bouncing
+        // TODO: Works poorly for smaller stars
+        for (Star star : stars){
+            double distX = star.getX() - x;
+            double distY = star.getY() - y;
+            double dist = Math.sqrt(Math.pow(distX,2) +
+                                    Math.pow(distY,2));
+            if (dist <= star.getRad()){
+                double angle = Math.atan2(distY,-distX);
+                x += distX >= 0 ? -1 * (Math.abs(star.getRad() * Math.cos(angle)) - distX) : Math.abs(star.getRad() * Math.cos(angle)) + distX;
+                y += distY >= 0 ? -1 * (Math.abs(star.getRad() * Math.sin(angle)) - distY) : Math.abs(star.getRad() * Math.sin(angle)) + distY;
+                
+                /*
+                 Calculate bounce trajectory
+                 Based on math found here:
+                 https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
+                */
+                Point2D ball = new Point2D.Double(dx,dy);
+                Point2D norm = new Point2D.Double((x-star.getX())/star.getRad(),(y-star.getY())/star.getRad());
+                double dotProd = 2 * ball.getX() * norm.getX() + ball.getY() * norm.getY();
+                Point2D temp = new Point2D.Double(dotProd * norm.getX(),dotProd * norm.getY());
+                
+                // momentum loss on each bounce
+                double elasticity = 0.75;
+                dx = elasticity *(ball.getX() - temp.getX());
+                dy = elasticity *(ball.getY() - temp.getY());
+            }
+        }
+        
         if (history.size() > 50) {
             history.remove(0);
         }
@@ -39,9 +70,12 @@ public class Satellite extends GravBod {
     // greatly increased gravity strength given smaller scale
     public void updateVelocity(ArrayList<Star> stars){
         for (Star star : stars){
-            double dist = Math.sqrt(Math.pow(x-star.getX(),2) +
-                    Math.pow(y-star.getY(),2));
-            double angle = Math.atan2((star.getY() - y),(star.getX() - x));
+            double distX = star.getX() - x;
+            double distY = star.getY() - y;
+            double dist = Math.sqrt(Math.pow(distX,2) +
+                    Math.pow(distY,2));
+            double angle = Math.atan2(distY,distX);
+
             double acc = .06674 * star.getMass() / Math.pow(dist,2);
             dx = (dx + acc * Math.cos(angle));
             dy = (dy + acc * Math.sin(angle));
