@@ -2,11 +2,10 @@ package com.company;
 
 import java.awt.*;
 
-// Represents an object that exerts gravity
-// Stationary
+// Represents a stationary object that exerts gravity
 public class Star extends GravBod{
 
-    private int mass;
+    private final int mass;
 
     public Star(double x, double y, int radius, Color color, int mass) {
         super(x, y, radius, color);

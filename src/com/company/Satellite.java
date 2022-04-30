@@ -2,7 +2,7 @@ package com.company;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 // Represents a body that experiences gravity but does not exert it
@@ -14,6 +14,9 @@ public class Satellite extends GravBod {
 
     protected double dx;
     protected double dy;
+
+    // greatly increased gravity strength given smaller scale
+    protected static final double GRAV_CONST = .06674;
     
     Satellite(double x, double y, int radius, Color color, double dx, double dy){
         super(x, y, radius, color);
@@ -27,7 +30,7 @@ public class Satellite extends GravBod {
         return history;
     }
 
-    public void updatePos(ArrayList<Star> stars) {
+    public void updatePos(List<Star> stars) {
         x += dx;
         y += dy;
         
@@ -67,16 +70,14 @@ public class Satellite extends GravBod {
     }
 
     // changes velocity of satellite based on gravitation attraction to other
-    // greatly increased gravity strength given smaller scale
-    public void updateVelocity(ArrayList<Star> stars){
+    public void updateVelocity(List<Star> stars){
         for (Star star : stars){
             double distX = star.getX() - x;
             double distY = star.getY() - y;
-            double dist = Math.sqrt(Math.pow(distX,2) +
-                    Math.pow(distY,2));
+            double dist = Math.sqrt(Math.pow(distX,2) + Math.pow(distY,2));
             double angle = Math.atan2(distY,distX);
 
-            double acc = .06674 * star.getMass() / Math.pow(dist,2);
+            double acc = GRAV_CONST * star.getMass() / Math.pow(dist,2);
             dx = (dx + acc * Math.cos(angle));
             dy = (dy + acc * Math.sin(angle));
         }

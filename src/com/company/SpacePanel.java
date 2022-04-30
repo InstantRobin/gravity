@@ -3,15 +3,19 @@ package com.company;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SpacePanel extends JPanel {
 
     // Arrays of stars and satellites to be rendered
-    private ArrayList<Satellite> satellites = new ArrayList<>();
-    private ArrayList<Star> stars = new ArrayList<>();
+    private List<Satellite> satellites = new ArrayList<>();
+    private List<Star> stars = new ArrayList<>();
 
-    // Temporary, used when previewing a star or satellite during mouse-drag creation
+    // Multiply rad by RAD_MASS_RATIO to get gravBod mass
+    private static final int RAD_MASS_RATIO = 20000;
+
+    // Used when previewing a star or satellite during mouse-drag creation
     private int previewRenderState = 0; /* Preview render state (according to mouse press)
                                 0: Not previewing
                                 1: Satellite preview (satellite + velocity vector)
@@ -36,7 +40,7 @@ public class SpacePanel extends JPanel {
         */
     }
 
-    // Sets component size to value determined here
+    // Set component size to value determined here
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(1920,1080);
@@ -88,7 +92,7 @@ public class SpacePanel extends JPanel {
 
     // Creates a star, mass is proportional to radius
     public void addStar(double x, double y, Color color, int rad){
-        stars.add(new Star(x,y, rad, color, rad*20000));
+        stars.add(new Star(x,y, rad, color, rad*RAD_MASS_RATIO));
     }
 
     // Stores a temporary GravBod to be rendered as a preview
@@ -107,20 +111,20 @@ public class SpacePanel extends JPanel {
                 g.drawLine(vLine[0].x, vLine[0].y, vLine[1].x, vLine[1].y);
                 g.setColor(Color.white);
             case 3:
-                // Renders Star
+                // Renders GravBod
                 drawGravBod(g, previewBod);
                 break;
         }
     }
 
-    // Sets current preview state
+    // Set current preview state
     public void setPreviewRenderState(int previewRenderState) {
         this.previewRenderState = previewRenderState;
     }
 
-    // Sets coordinates of preview line
-    public void setVLine(Point[] tempLn) {
-        this.vLine = tempLn;
+    // Set coordinates of preview line
+    public void setVLine(Point[] vLine) {
+        this.vLine = vLine;
     }
 
     public void clearStars(){

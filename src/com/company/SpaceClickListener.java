@@ -23,7 +23,7 @@ public class SpaceClickListener extends MouseInputAdapter {
         color = new Color((int) (Math.random() * 255), (int) (Math.random()*255), (int) (Math.random()*255));
     }
 
-    // Default GravBod creation
+    // Generic GravBod creation
     // Middle click creates satellite with random velocity
     // Right click creates star with size 50
     @Override

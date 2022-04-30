@@ -8,7 +8,7 @@ public class Main {
 
     private static JFrame frame;
     private static GridBagConstraints c;
-    private static final int fps = 100;
+    private static final int fps = 20;
 
     public static void main(String[] args){
         SpacePanel space = new SpacePanel();
