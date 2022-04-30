@@ -24,11 +24,16 @@ public class SpacePanel extends JPanel {
 
     SpacePanel(){
         super();
-        // Example stars / satellites:
-//        stars.add(new Star(300,500, 50, Color.orange, 1000000));
-//        stars.add(new Star(1200,500, 50, Color.cyan, 1000000));
-//        satellites.add(new Satellite(500,500,10,Color.red, 0, 0));
-//        satellites.add(new Satellite(800,500,10,Color.green, -11, 10));
+        // Set cool space background color
+        this.setBackground(Color.black);
+
+        /*
+        Example stars / satellites:
+        stars.add(new Star(300,500, 50, Color.orange, 1000000));
+        stars.add(new Star(1200,500, 50, Color.cyan, 1000000));
+        satellites.add(new Satellite(500,500,10,Color.red, 0, 0));
+        satellites.add(new Satellite(800,500,10,Color.green, -11, 10));
+        */
     }
 
     // Sets component size to value determined here

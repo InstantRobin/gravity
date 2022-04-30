@@ -30,7 +30,9 @@ public class SpaceClickListener extends MouseInputAdapter {
     public void mouseClicked(MouseEvent e) {
         randColor();
         if (e.getButton() == MouseEvent.BUTTON2) {
-            panel.addSat(e.getX(), e.getY(), color, 2 * (Math.random() - 0.5) * 20, 2 * (Math.random() - 0.5) * 20);
+            double randX = 2 * (Math.random() - 0.5) * 20;
+            double randY = 2 * (Math.random() - 0.5) * 20;
+            panel.addSat(e.getX(), e.getY(), color, randX, randY);
         } else if (e.getButton() == MouseEvent.BUTTON3) {
             panel.addStar(e.getX(), e.getY(), color, 50);
         }
