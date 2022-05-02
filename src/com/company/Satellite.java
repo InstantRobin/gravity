@@ -17,6 +17,7 @@ public class Satellite extends GravBod {
 
     // greatly increased gravity strength given smaller scale
     protected static final double GRAV_CONST = .06674;
+    public static final double ELASTICITY = 0.75;
     
     Satellite(double x, double y, int radius, Color color, double dx, double dy){
         super(x, y, radius, color);
@@ -42,10 +43,16 @@ public class Satellite extends GravBod {
             double dist = Math.sqrt(Math.pow(distX,2) +
                                     Math.pow(distY,2));
             if (dist <= star.getRad()){
-                double angle = Math.atan2(distY,-distX);
-                x += distX >= 0 ? -1 * (Math.abs(star.getRad() * Math.cos(angle)) - distX) : Math.abs(star.getRad() * Math.cos(angle)) + distX;
-                y += distY >= 0 ? -1 * (Math.abs(star.getRad() * Math.sin(angle)) - distY) : Math.abs(star.getRad() * Math.sin(angle)) + distY;
-                
+                double angle = Math.atan2(distY,distX);
+                double displaceX = Math.abs(star.getRad() * Math.cos(angle));
+                double displaceY = Math.abs(star.getRad() * Math.sin(angle));
+                x += (distX >= 0)
+                        ? distX - displaceX
+                        : distX + displaceX;
+                y += (distY >= 0)
+                        ? distY - displaceY
+                        : distY + displaceY;
+
                 /*
                  Calculate bounce trajectory
                  Based on math found here:
@@ -57,9 +64,8 @@ public class Satellite extends GravBod {
                 Point2D temp = new Point2D.Double(dotProd * norm.getX(),dotProd * norm.getY());
                 
                 // momentum loss on each bounce
-                double elasticity = 0.75;
-                dx = elasticity *(ball.getX() - temp.getX());
-                dy = elasticity *(ball.getY() - temp.getY());
+                dx = ELASTICITY *(ball.getX() - temp.getX());
+                dy = ELASTICITY *(ball.getY() - temp.getY());
             }
         }
         
