@@ -11,6 +11,7 @@ public class SpacePanel extends JPanel {
     // Arrays of stars and satellites to be rendered
     private List<Satellite> satellites = new ArrayList<>();
     private List<Star> stars = new ArrayList<>();
+    private final int speed;
 
     // Multiply rad by RAD_MASS_RATIO to get gravBod mass
     private static final int RAD_MASS_RATIO = 20000;
@@ -26,11 +27,19 @@ public class SpacePanel extends JPanel {
     // Velocity line, used to preview velocity when creating Satellites
     private Point[] vLine = new Point[2];
 
-    SpacePanel(){
+    SpacePanel(int speed){
         super();
         // Set cool space background color
         this.setBackground(Color.black);
+        this.speed = speed;
 
+        Star temp = new Star(1000,700, 200, Color.orange, 1000000);
+        stars.add(temp);
+        for (int i = 0; i < 360; i+= 10){
+            double xPos = temp.getX() - Math.sin(i) * temp.getRad() * 3;
+            double yPos = temp.getY() + Math.cos(i) * temp.getRad() * 3;
+            satellites.add(new Satellite(xPos,yPos,10,Color.red, 0, 0,speed));
+        }
         /*
         Example stars / satellites:
         stars.add(new Star(300,500, 50, Color.orange, 1000000));
@@ -87,7 +96,7 @@ public class SpacePanel extends JPanel {
 
     // Creates a satellite
     public void addSat(double x, double y, Color color, double dx, double dy){
-        satellites.add(new Satellite(x,y,10,color,dy,dx));
+        satellites.add(new Satellite(x,y,10,color,dy,dx,speed));
     }
 
     // Creates a star, mass is proportional to radius

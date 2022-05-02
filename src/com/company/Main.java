@@ -7,12 +7,13 @@ public class Main {
 
     private static JFrame frame;
     private static GridBagConstraints constraints;
-    private static final int fps = 100;
+    private static final int speed = 1000;
+    private static final int fps = 200;
 
     public static void main(String[] args){
         initFrame();
         initGridBag();
-        SpacePanel space = new SpacePanelFactory(frame, constraints).initSpace();
+        SpacePanel space = new SpacePanelFactory(frame, constraints, speed).initSpace();
         startSimulation(space);
     }
 
@@ -31,7 +32,7 @@ public class Main {
     }
 
     private static void startSimulation(SpacePanel space) {
-        Timer timer = new Timer(1000/fps, e -> {
+        Timer timer = new Timer(1000/ fps, e -> {
             space.updateSatellites();
             space.repaint();
         });

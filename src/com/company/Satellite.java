@@ -14,15 +14,17 @@ public class Satellite extends GravBod {
 
     protected double dx;
     protected double dy;
+    protected int speed;
 
     // greatly increased gravity strength given smaller scale
     protected static final double GRAV_CONST = .06674;
     public static final double ELASTICITY = 0.75;
     
-    Satellite(double x, double y, int radius, Color color, double dx, double dy){
+    Satellite(double x, double y, int radius, Color color, double dx, double dy, int speed){
         super(x, y, radius, color);
         this.dx = dx;
         this.dy = dy;
+        this.speed = speed;
         history.add(new Point((int)x, (int)y));
         history.add(new Point((int)x, (int)y));
     }
@@ -42,30 +44,27 @@ public class Satellite extends GravBod {
             double dist = Math.sqrt(Math.pow(distX,2) +
                                     Math.pow(distY,2));
             if (dist <= star.getRad()){
-                unCollide(star, distX, distY);
+                unCollide(star);
                 bounce(star);
             }
         }
         
-        if (history.size() > 50) {
+        if (history.size() > 150) {
             history.remove(0);
         }
         history.add(new Point((int) x, (int) y));
     }
 
-    private void unCollide(Star star, double distX, double distY) {
-        double angle = Math.atan2(distY, distX);
-        double displaceX = Math.abs(star.getRad() * Math.cos(angle));
-        double displaceY = Math.abs(star.getRad() * Math.sin(angle));
-        x += (distX >= 0)
-                ? distX - displaceX
-                : distX + displaceX;
-        y += (distY >= 0)
-                ? distY - displaceY
-                : distY + displaceY;
+    private void unCollide(Star star) {
+        double prevX = x - dx;
+        double prevY = y - dy;
+        double prevAng = Math.atan2(star.getX() - prevX, star.getY() - prevY);
+        double nearX = star.getX() - Math.sin(prevAng) * star.getRad();
+        double nearY = star.getY() - Math.cos(prevAng) * star.getRad();
+        x = nearX;
+        y = nearY;
     }
 
-    // TODO: Works poorly for smaller stars
     private void bounce(Star star) {
     /*
      Calculate bounce trajectory
@@ -91,8 +90,8 @@ public class Satellite extends GravBod {
             double angle = Math.atan2(distY,distX);
 
             double acc = GRAV_CONST * star.getMass() / Math.pow(dist,2);
-            dx = (dx + acc * Math.cos(angle));
-            dy = (dy + acc * Math.sin(angle));
+            dx = (dx + acc * Math.cos(angle) / speed);
+            dy = (dy + acc * Math.sin(angle) / speed);
         }
     }
 
