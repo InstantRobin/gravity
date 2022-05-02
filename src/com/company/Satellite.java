@@ -5,6 +5,8 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static java.lang.Math.sqrt;
+
 // Represents a body that experiences gravity but does not exert it
 // Moves according to path of gravity
 public class Satellite extends GravBod {
@@ -72,13 +74,15 @@ public class Satellite extends GravBod {
      https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
     */
         Point2D ball = new Point2D.Double(dx,dy);
-        Point2D norm = new Point2D.Double((x- star.getX())/ star.getRad(),(y- star.getY())/ star.getRad());
-        double dotProd = 2 * ball.getX() * norm.getX() + ball.getY() * norm.getY();
-        Point2D temp = new Point2D.Double(dotProd * norm.getX(),dotProd * norm.getY());
+        Point2D norm = new Point2D.Double((x-star.getX())/star.getRad(),(y-star.getY())/star.getRad());
+        double normSum = sqrt(norm.getX() * norm.getX() + norm.getY() * norm.getY());
+        norm = new Point2D.Double(norm.getX()/normSum, norm.getY() / normSum);
+        double dotProd = 2 * (ball.getX() * norm.getX() + ball.getY() * norm.getY());
+        Point2D res = new Point2D.Double(dotProd * norm.getX(),dotProd * norm.getY());
 
         // momentum loss on each bounce
-        dx = ELASTICITY * (ball.getX() - temp.getX());
-        dy = ELASTICITY * (ball.getY() - temp.getY());
+        dx = ELASTICITY * (ball.getX() - res.getX());
+        dy = ELASTICITY * (ball.getY() - res.getY());
     }
 
     // changes velocity of satellite based on gravitation attraction to other

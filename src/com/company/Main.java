@@ -7,7 +7,7 @@ public class Main {
 
     private static JFrame frame;
     private static GridBagConstraints constraints;
-    private static final int speed = 1000;
+    private static final int speed = 60;
     private static final int fps = 200;
 
     public static void main(String[] args){
