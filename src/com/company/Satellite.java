@@ -36,36 +36,14 @@ public class Satellite extends GravBod {
         y += dy;
         
         // Checks to make sure doesn't clip inside of stars, allows bouncing
-        // TODO: Works poorly for smaller stars
         for (Star star : stars){
             double distX = star.getX() - x;
             double distY = star.getY() - y;
             double dist = Math.sqrt(Math.pow(distX,2) +
                                     Math.pow(distY,2));
             if (dist <= star.getRad()){
-                double angle = Math.atan2(distY,distX);
-                double displaceX = Math.abs(star.getRad() * Math.cos(angle));
-                double displaceY = Math.abs(star.getRad() * Math.sin(angle));
-                x += (distX >= 0)
-                        ? distX - displaceX
-                        : distX + displaceX;
-                y += (distY >= 0)
-                        ? distY - displaceY
-                        : distY + displaceY;
-
-                /*
-                 Calculate bounce trajectory
-                 Based on math found here:
-                 https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
-                */
-                Point2D ball = new Point2D.Double(dx,dy);
-                Point2D norm = new Point2D.Double((x-star.getX())/star.getRad(),(y-star.getY())/star.getRad());
-                double dotProd = 2 * ball.getX() * norm.getX() + ball.getY() * norm.getY();
-                Point2D temp = new Point2D.Double(dotProd * norm.getX(),dotProd * norm.getY());
-                
-                // momentum loss on each bounce
-                dx = ELASTICITY *(ball.getX() - temp.getX());
-                dy = ELASTICITY *(ball.getY() - temp.getY());
+                unCollide(star, distX, distY);
+                bounce(star);
             }
         }
         
@@ -73,6 +51,35 @@ public class Satellite extends GravBod {
             history.remove(0);
         }
         history.add(new Point((int) x, (int) y));
+    }
+
+    private void unCollide(Star star, double distX, double distY) {
+        double angle = Math.atan2(distY, distX);
+        double displaceX = Math.abs(star.getRad() * Math.cos(angle));
+        double displaceY = Math.abs(star.getRad() * Math.sin(angle));
+        x += (distX >= 0)
+                ? distX - displaceX
+                : distX + displaceX;
+        y += (distY >= 0)
+                ? distY - displaceY
+                : distY + displaceY;
+    }
+
+    // TODO: Works poorly for smaller stars
+    private void bounce(Star star) {
+    /*
+     Calculate bounce trajectory
+     Based on math found here:
+     https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
+    */
+        Point2D ball = new Point2D.Double(dx,dy);
+        Point2D norm = new Point2D.Double((x- star.getX())/ star.getRad(),(y- star.getY())/ star.getRad());
+        double dotProd = 2 * ball.getX() * norm.getX() + ball.getY() * norm.getY();
+        Point2D temp = new Point2D.Double(dotProd * norm.getX(),dotProd * norm.getY());
+
+        // momentum loss on each bounce
+        dx = ELASTICITY * (ball.getX() - temp.getX());
+        dy = ELASTICITY * (ball.getY() - temp.getY());
     }
 
     // changes velocity of satellite based on gravitation attraction to other
