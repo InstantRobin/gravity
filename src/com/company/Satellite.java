@@ -11,35 +11,50 @@ import static java.lang.Math.sqrt;
 // Moves according to path of gravity
 public class Satellite extends GravBod {
 
+    public static final int MAX_HISTORY = 150;
     // History of all points visited by planet
     protected CopyOnWriteArrayList<Point> history = new CopyOnWriteArrayList<>();
 
     protected double dx;
     protected double dy;
-    protected int speed;
+    protected int simSpeed;
 
     // greatly increased gravity strength given smaller scale
     protected static final double GRAV_CONST = .06674;
     public static final double ELASTICITY = 0.75;
     
-    Satellite(double x, double y, int radius, Color color, double dx, double dy, int speed){
+    Satellite(double x, double y, int radius, Color color, double dx, double dy, int simSpeed){
         super(x, y, radius, color);
         this.dx = dx;
         this.dy = dy;
-        this.speed = speed;
+        this.simSpeed = simSpeed;
         history.add(new Point((int)x, (int)y));
         history.add(new Point((int)x, (int)y));
     }
 
-    public CopyOnWriteArrayList<Point> getHistory() {
-        return history;
+    public void updateVelocity(List<Star> stars){
+        for (Star star : stars){
+            double distX = star.getX() - x;
+            double distY = star.getY() - y;
+            double dist = Math.sqrt(Math.pow(distX,2) + Math.pow(distY,2));
+            double angle = Math.atan2(distY,distX);
+
+            double acc = GRAV_CONST * star.getMass() / Math.pow(dist,2);
+            dx = (dx + acc * Math.cos(angle) / simSpeed);
+            dy = (dy + acc * Math.sin(angle) / simSpeed);
+        }
     }
 
     public void updatePos(List<Star> stars) {
         x += dx;
         y += dy;
-        
-        // Checks to make sure doesn't clip inside of stars, allows bouncing
+
+        checkForCollisions(stars);
+        updateHistory();
+    }
+
+    // Checks to make sure doesn't clip inside of stars, if so, moves to edge of star and bounces
+    private void checkForCollisions(List<Star> stars) {
         for (Star star : stars){
             double distX = star.getX() - x;
             double distY = star.getY() - y;
@@ -50,13 +65,9 @@ public class Satellite extends GravBod {
                 bounce(star);
             }
         }
-        
-        if (history.size() > 150) {
-            history.remove(0);
-        }
-        history.add(new Point((int) x, (int) y));
     }
 
+    // Given a colliding star, moves the Satellite to the nearest point on star's radius to previous location
     private void unCollide(Star star) {
         double prevX = x - dx;
         double prevY = y - dy;
@@ -67,37 +78,48 @@ public class Satellite extends GravBod {
         y = nearY;
     }
 
-    private void bounce(Star star) {
     /*
      Calculate bounce trajectory
-     Based on math found here:
+     Based on equation found here:
      https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
+     Added extra spacing because this fn is dense + complicated
     */
-        Point2D ball = new Point2D.Double(dx,dy);
-        Point2D norm = new Point2D.Double((x-star.getX())/star.getRad(),(y-star.getY())/star.getRad());
-        double normSum = sqrt(norm.getX() * norm.getX() + norm.getY() * norm.getY());
-        norm = new Point2D.Double(norm.getX()/normSum, norm.getY() / normSum);
-        double dotProd = 2 * (ball.getX() * norm.getX() + ball.getY() * norm.getY());
-        Point2D res = new Point2D.Double(dotProd * norm.getX(),dotProd * norm.getY());
+    private void bounce(Star star) {
+        Point2D satVec = new Point2D.Double(dx,dy);
 
-        // momentum loss on each bounce
-        dx = ELASTICITY * (ball.getX() - res.getX());
-        dy = ELASTICITY * (ball.getY() - res.getY());
+        // starNormalVec is the normal vector at the point of impact
+        Point2D starNormalVec = new Point2D.Double((x-star.getX()) / star.getRad(),
+                                                   (y-star.getY()) / star.getRad());
+
+        // normMag is the magnitude of the normal vector, is used to normalize starNormalVec
+        // normalizing a normal vector gives us the unit normal vector
+        // they really need new terms for this stuff
+        double normMag = sqrt(starNormalVec.getX() * starNormalVec.getX()
+                            + starNormalVec.getY() * starNormalVec.getY());
+
+        Point2D unitNormVec = new Point2D.Double(starNormalVec.getX() / normMag,
+                                                 starNormalVec.getY() / normMag);
+
+        // 2(d*n) where d is satVec and n is unitNormalVec
+        double dotProd = 2 * (satVec.getX() * unitNormVec.getX()
+                            + satVec.getY() * unitNormVec.getY());
+        // 2(d*n)n
+        Point2D res = new Point2D.Double(dotProd * unitNormVec.getX(),
+                                         dotProd * unitNormVec.getY());
+
+        // d - 2(d*n)n, as well as momentum loss on each bounce
+        dx = ELASTICITY * (satVec.getX() - res.getX());
+        dy = ELASTICITY * (satVec.getY() - res.getY());
+    }
+
+    private void updateHistory() {
+        if (history.size() > MAX_HISTORY) {
+            history.remove(0);
+        }
+        history.add(new Point((int) x, (int) y));
     }
 
     // changes velocity of satellite based on gravitation attraction to other
-    public void updateVelocity(List<Star> stars){
-        for (Star star : stars){
-            double distX = star.getX() - x;
-            double distY = star.getY() - y;
-            double dist = Math.sqrt(Math.pow(distX,2) + Math.pow(distY,2));
-            double angle = Math.atan2(distY,distX);
-
-            double acc = GRAV_CONST * star.getMass() / Math.pow(dist,2);
-            dx = (dx + acc * Math.cos(angle) / speed);
-            dy = (dy + acc * Math.sin(angle) / speed);
-        }
-    }
 
     public double getDx() {
         return dx;
@@ -113,5 +135,9 @@ public class Satellite extends GravBod {
 
     public void setDy(double dy) {
         this.dy = dy;
+    }
+
+    public CopyOnWriteArrayList<Point> getHistory() {
+        return history;
     }
 }

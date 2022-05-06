@@ -8,13 +8,13 @@ public class SpacePanelFactory {
     private static JFrame frame;
     private static GridBagConstraints constraints;
     private static SpacePanel space;
-    private int speed;
+    private final int simSpeed;
     
-    SpacePanelFactory(JFrame frame, GridBagConstraints constraints, int speed){
+    SpacePanelFactory(JFrame frame, GridBagConstraints constraints, int simSpeed){
         SpacePanelFactory.frame = frame;
         SpacePanelFactory.constraints = constraints;
-        this.speed = speed;
-        space = new SpacePanel(speed);
+        this.simSpeed = simSpeed;
+        space = new SpacePanel(simSpeed);
     }
 
     public SpacePanel initSpace() {
@@ -46,7 +46,7 @@ public class SpacePanelFactory {
 
     // Enables mouse interaction
     private void addSpaceClickListener() {
-        SpaceClickListener listener = new SpaceClickListener(space,speed);
+        SpaceClickListener listener = new SpaceClickListener(space, simSpeed);
         space.addMouseListener(listener);
         space.addMouseMotionListener(listener);
     }

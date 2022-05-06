@@ -13,12 +13,12 @@ public class SpaceClickListener extends MouseInputAdapter {
     private int x;
     private int y;
     private int button;
-    private int speed;
+    private final int simSpeed;
     Point[] line = new Point[2];
 
-    SpaceClickListener(SpacePanel panel, int speed){
+    SpaceClickListener(SpacePanel panel, int simSpeed){
         this.panel = panel;
-        this.speed = speed;
+        this.simSpeed = simSpeed;
     }
 
     private void randColor(){
@@ -32,8 +32,8 @@ public class SpaceClickListener extends MouseInputAdapter {
     public void mouseClicked(MouseEvent e) {
         randColor();
         if (e.getButton() == MouseEvent.BUTTON2) {
-            double randX = 2 * (Math.random() - 0.5) * 20 / speed;
-            double randY = 2 * (Math.random() - 0.5) * 20 / speed;
+            double randX = 2 * (Math.random() - 0.5) * 20 / simSpeed;
+            double randY = 2 * (Math.random() - 0.5) * 20 / simSpeed;
             panel.addSat(e.getX(), e.getY(), color, randX, randY);
         } else if (e.getButton() == MouseEvent.BUTTON3) {
             panel.addStar(e.getX(), e.getY(), color, 50);
@@ -51,7 +51,7 @@ public class SpaceClickListener extends MouseInputAdapter {
 
         // Initializes GravBod based on click, locks in current creation type
         if (e.getButton() == MouseEvent.BUTTON1) {
-            bod = new Satellite(x, y, 10, color, 2 * (Math.random() - 0.5) * 20, 2 * (Math.random() - 0.5) * 20, speed);
+            bod = new Satellite(x, y, 10, color, 2 * (Math.random() - 0.5) * 20, 2 * (Math.random() - 0.5) * 20, simSpeed);
             // Stores points for movement vector
             line[0] = new Point(x,y);
             line[1] = new Point(x,y);
@@ -84,7 +84,7 @@ public class SpaceClickListener extends MouseInputAdapter {
     @Override
     public void mouseReleased(MouseEvent e){
         if (button == MouseEvent.BUTTON1) {
-            panel.addSat(bod.getX(),bod.getY(),color,-((float)(e.getY()-y)) / speed,-((float)(e.getX()-x)) / speed);
+            panel.addSat(bod.getX(),bod.getY(),color,-((float)(e.getY()-y)) / simSpeed,-((float)(e.getX()-x)) / simSpeed);
         } else if (button == MouseEvent.BUTTON3) {
            panel.addStar(bod.getX(),bod.getY(),bod.getColor(),bod.getRad());
         }

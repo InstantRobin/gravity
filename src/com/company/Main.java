@@ -7,13 +7,13 @@ public class Main {
 
     private static JFrame frame;
     private static GridBagConstraints constraints;
-    private static final int speed = 60;
+    private static final int simSpeed = 60;
     private static final int fps = 200;
 
     public static void main(String[] args){
         initFrame();
         initGridBag();
-        SpacePanel space = new SpacePanelFactory(frame, constraints, speed).initSpace();
+        SpacePanel space = new SpacePanelFactory(frame, constraints, simSpeed).initSpace();
         startSimulation(space);
     }
 
