@@ -11,6 +11,7 @@ public class Planet {
     private double y;
     private double dx;
     private double dy;
+    private boolean deleted;
     // History of all points visited by planet
     private CopyOnWriteArrayList<Point> history = new CopyOnWriteArrayList<>();
 
@@ -21,14 +22,33 @@ public class Planet {
         this.y = y;
         this.dx = dx;
         this.dy = dy;
+        deleted = false;
         history.add(new Point(x, y));
         history.add(new Point(x, y));
     }
 
     public void updatePos(){
-        x += dx;
-        y += dy;
-        history.add(new Point((int) x, (int) y));
+        if (!deleted) {
+            x += dx;
+            y += dy;
+            history.add(new Point((int) x, (int) y));
+        }
+    }
+
+    public void addPlanet(Planet p) {
+        int sumMass = mass + p.getMass();
+        dx = (dx * mass + p.getDx() * p.getMass()) / sumMass;
+        dy = (dy * mass + p.getDy() * p.getMass()) / sumMass;
+        mass = sumMass;
+        radius = radius + p.getRad();
+    }
+
+    public void delete() {
+        deleted = true;
+        mass = 0;
+        radius = 0;
+        x = 100000;
+        y = 100000;
     }
 
     public int getMass() {

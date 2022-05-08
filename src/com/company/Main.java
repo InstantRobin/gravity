@@ -15,11 +15,11 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
 
-        while(true){
+        Timer test = new Timer(1, e -> {
             space.updatePlanets();
             space.repaint();
-            Thread.sleep(10);
-        }
+        });
+        test.start();
 
     }
 }

@@ -14,8 +14,8 @@ public class SpacePanel extends JPanel {
 
     SpacePanel(){
         super();
-        planets.add(new Planet(100,10,400,300, 5, 0));
-        planets.add(new Planet(100000,100,500,500, 0, 0));
+        planets.add(new Planet(100000,100,1920/2,1080/2, 0, 0));
+        planets.add(new Planet(5,10,200,700, 1.5, -2.5));
     }
 
     // Sets component size to value determined here
@@ -53,6 +53,10 @@ public class SpacePanel extends JPanel {
             if (p != planet) {
                 double dist = Math.sqrt(Math.pow(planet.getX()-p.getX(),2) +
                         Math.pow(planet.getY()-p.getY(),2));
+                if (dist < p.getRad()) {
+                    p.addPlanet(planet);
+                    planet.delete();
+                }
                 double angle = Math.atan2((p.getY() - planet.getY()),(p.getX() - planet.getX()));
                 double acc = .06674 * p.getMass() / Math.pow(dist,2);
                 planet.setDx(planet.getDx() + acc * Math.cos(angle));
