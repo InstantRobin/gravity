@@ -11,7 +11,7 @@ import static java.lang.Math.sqrt;
 // Moves according to path of gravity
 public class Satellite extends GravBod {
 
-    public static final int MAX_HISTORY = 150;
+    public static final int MAX_HISTORY = 300;
     // History of all points visited by planet
     protected CopyOnWriteArrayList<Point> history = new CopyOnWriteArrayList<>();
 
@@ -39,9 +39,9 @@ public class Satellite extends GravBod {
             double dist = Math.sqrt(Math.pow(distX,2) + Math.pow(distY,2));
             double angle = Math.atan2(distY,distX);
 
-            double acc = GRAV_CONST * star.getMass() / Math.pow(dist,2);
-            dx = (dx + acc * Math.cos(angle) / simSpeed);
-            dy = (dy + acc * Math.sin(angle) / simSpeed);
+            double acc = (GRAV_CONST * star.getMass() / Math.pow(dist,2)) / simSpeed;
+            dx = dx + acc * Math.cos(angle);
+            dy = dy + acc * Math.sin(angle);
         }
     }
 
@@ -110,6 +110,10 @@ public class Satellite extends GravBod {
         // d - 2(d*n)n, as well as momentum loss on each bounce
         dx = ELASTICITY * (satVec.getX() - res.getX());
         dy = ELASTICITY * (satVec.getY() - res.getY());
+
+        if (dx <= 0.01 && dy <= 0.01){
+            history.clear();
+        }
     }
 
     private void updateHistory() {

@@ -13,19 +13,22 @@ public class SpacePanel extends JPanel {
     private List<Star> stars = new ArrayList<>();
     private final int simSpeed;
 
-    // Multiply rad by RAD_MASS_RATIO to get gravBod mass
-    private static final int RAD_MASS_RATIO = 20000;
+    /* Preview render state (according to mouse press)
+    0: Not previewing
+    1: Left  Click: Satellite preview (satellite + velocity vector)
+    3: Right Click: Star preview
+    */
+    public enum RenderState {
+        NONE, SAT, STAR
+    }
 
     // Used when previewing a star or satellite during mouse-drag creation
-    private int previewRenderState = 0; /* Preview render state (according to mouse press)
-                                0: Not previewing
-                                1: Satellite preview (satellite + velocity vector)
-                                3: Star preview
-                             */
+    private RenderState previewRenderState = RenderState.NONE;
+
     // GravBod preview to be rendered when creating GravBods
     private GravBod previewBod;
-    // Velocity line, used to preview velocity when creating Satellites
-    private Point[] vLine = new Point[2];
+    // Used to preview velocity when creating Satellites
+    private Point[] previewLine = new Point[2];
 
     SpacePanel(int simSpeed){
         super();
@@ -93,7 +96,7 @@ public class SpacePanel extends JPanel {
 
     // Creates a star, mass is proportional to radius
     public void addStar(double x, double y, Color color, int rad){
-        stars.add(new Star(x,y, rad, color, rad*RAD_MASS_RATIO));
+        stars.add(new Star(x,y, rad, color));
     }
 
     // Stores a temporary GravBod to be rendered as a preview
@@ -104,14 +107,14 @@ public class SpacePanel extends JPanel {
     // Renders the GravBod stored in preview, if left click, renders line stored in preview first
     public void renderPreview(Graphics g){
         switch(previewRenderState){
-            case 0:
+            case NONE:
                 break;
-            case 1:
+            case SAT:
                 // Renders Satellite and Velocity Line preview based on mouse location
                 g.setColor(previewBod.getColor());
-                g.drawLine(vLine[0].x, vLine[0].y, vLine[1].x, vLine[1].y);
+                g.drawLine(previewLine[0].x, previewLine[0].y, previewLine[1].x, previewLine[1].y);
                 g.setColor(Color.white);
-            case 3:
+            case STAR:
                 // Renders GravBod
                 drawGravBod(g, previewBod);
                 break;
@@ -119,13 +122,13 @@ public class SpacePanel extends JPanel {
     }
 
     // Set current preview state
-    public void setPreviewRenderState(int previewRenderState) {
+    public void setPreviewRenderState(RenderState previewRenderState) {
         this.previewRenderState = previewRenderState;
     }
 
     // Set coordinates of preview line
-    public void setVLine(Point[] vLine) {
-        this.vLine = vLine;
+    public void setPreviewLine(Point[] vLine) {
+        this.previewLine = vLine;
     }
 
     public void clearStars(){

@@ -9,12 +9,13 @@ public class SpaceClickListener extends MouseInputAdapter {
 
     private final SpacePanel panel;
     private Color color;
-    private GravBod bod;
+    private GravBod previewBod;
     private int x;
     private int y;
     private int button;
     private final int simSpeed;
-    Point[] line = new Point[2];
+    private static final double VEL_MULTIPLIER = 1.5;
+    Point[] previewLine = new Point[2];
 
     SpaceClickListener(SpacePanel panel, int simSpeed){
         this.panel = panel;
@@ -32,11 +33,11 @@ public class SpaceClickListener extends MouseInputAdapter {
     public void mouseClicked(MouseEvent e) {
         randColor();
         if (e.getButton() == MouseEvent.BUTTON2) {
-            double randX = 2 * (Math.random() - 0.5) * 20 / simSpeed;
-            double randY = 2 * (Math.random() - 0.5) * 20 / simSpeed;
+            double randX = VEL_MULTIPLIER * (Math.random() - 0.5) * 500 / simSpeed;
+            double randY = VEL_MULTIPLIER * (Math.random() - 0.5) * 500 / simSpeed;
             panel.addSat(e.getX(), e.getY(), color, randX, randY);
         } else if (e.getButton() == MouseEvent.BUTTON3) {
-            panel.addStar(e.getX(), e.getY(), color, 50);
+            panel.addStar(e.getX(), e.getY(), color, 100);
         }
     }
 
@@ -51,18 +52,18 @@ public class SpaceClickListener extends MouseInputAdapter {
 
         // Initializes GravBod based on click, locks in current creation type
         if (e.getButton() == MouseEvent.BUTTON1) {
-            bod = new Satellite(x, y, 10, color, 2 * (Math.random() - 0.5) * 20, 2 * (Math.random() - 0.5) * 20, simSpeed);
+            previewBod = new Satellite(x, y, 10, color, 2 * (Math.random() - 0.5) * 20, 2 * (Math.random() - 0.5) * 20, simSpeed);
             // Stores points for movement vector
-            line[0] = new Point(x,y);
-            line[1] = new Point(x,y);
-            panel.setVLine(line);
-            panel.setPreviewBod(bod);
-            panel.setPreviewRenderState(1);
+            previewLine[0] = new Point(x,y);
+            previewLine[1] = new Point(x,y);
+            panel.setPreviewLine(previewLine);
+            panel.setPreviewBod(previewBod);
+            panel.setPreviewRenderState(SpacePanel.RenderState.SAT);
             button = MouseEvent.BUTTON1; // so mouseDragged knows which action is being taken
         } else if (e.getButton() == MouseEvent.BUTTON3) {
-            bod = new Star(x, y, 0, color, 0);
-            panel.setPreviewBod(bod);
-            panel.setPreviewRenderState(3);
+            previewBod = new Star(x, y, 0, color);
+            panel.setPreviewBod(previewBod);
+            panel.setPreviewRenderState(SpacePanel.RenderState.STAR);
             button = MouseEvent.BUTTON3;
         }
     }
@@ -72,9 +73,9 @@ public class SpaceClickListener extends MouseInputAdapter {
     @Override
     public void mouseDragged(MouseEvent e){
         if (button == MouseEvent.BUTTON1) {
-            line[1] = new Point(e.getX(),e.getY());
+            previewLine[1] = new Point(e.getX(),e.getY());
         } else if (button == MouseEvent.BUTTON3) {
-            bod.setRad((int)Math.sqrt(Math.pow(e.getX()-x,2)+Math.pow(e.getY()-y,2)));
+            previewBod.setRad((int)Math.sqrt(Math.pow(e.getX()-x,2)+Math.pow(e.getY()-y,2)));
         }
     }
 
@@ -84,11 +85,13 @@ public class SpaceClickListener extends MouseInputAdapter {
     @Override
     public void mouseReleased(MouseEvent e){
         if (button == MouseEvent.BUTTON1) {
-            panel.addSat(bod.getX(),bod.getY(),color,-((float)(e.getY()-y)) / simSpeed,-((float)(e.getX()-x)) / simSpeed);
+            panel.addSat(previewBod.getX(), previewBod.getY(),color,
+                    VEL_MULTIPLIER * -((double)(e.getY()-y)) / simSpeed,
+                    VEL_MULTIPLIER * -((double)(e.getX()-x)) / simSpeed);
         } else if (button == MouseEvent.BUTTON3) {
-           panel.addStar(bod.getX(),bod.getY(),bod.getColor(),bod.getRad());
+           panel.addStar(previewBod.getX(), previewBod.getY(), previewBod.getColor(), previewBod.getRad());
         }
-        panel.setPreviewRenderState(0);
+        panel.setPreviewRenderState(SpacePanel.RenderState.NONE);
         button = 0;
     }
 }

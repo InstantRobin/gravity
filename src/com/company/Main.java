@@ -7,8 +7,8 @@ public class Main {
 
     private static JFrame frame;
     private static GridBagConstraints constraints;
-    private static final int simSpeed = 60;
-    private static final int fps = 200;
+    private static final int simSpeed = 800;
+    private static final int fps = 120;
 
     public static void main(String[] args){
         initFrame();
@@ -32,12 +32,16 @@ public class Main {
     }
 
     private static void startSimulation(SpacePanel space) {
-        Timer timer = new Timer(1000/ fps, e -> {
-            space.updateSatellites();
+        Timer frameTimer = new Timer(1000/ fps, e -> {
             space.repaint();
         });
 
-        timer.start();
+        Timer physicsTimer = new Timer(1000/ simSpeed, e -> {
+            space.updateSatellites();
+        });
+
+        frameTimer.start();
+        physicsTimer.start();
     }
 
 }
