@@ -14,7 +14,7 @@ public class SpaceClickListener extends MouseInputAdapter {
     private int y;
     private int button;
     private final int simSpeed;
-    private static final double VEL_MULTIPLIER = 1.5;
+    private static final double VEL_MULTIPLIER = 2;
     Point[] previewLine = new Point[2];
 
     SpaceClickListener(SpacePanel panel, int simSpeed){
