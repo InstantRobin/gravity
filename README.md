@@ -22,6 +22,11 @@ As of the current version, stars are stationary, and satellites do not exert gra
 - Middle Click:
   - Place Satellite with a random velocity
 
+### How to Run:
+
+- Requires Java JDK + JRE 16
+- Run gravity.jar inside /out/artifacts/gravity_jar with java
+
 ### Branches:
 - Multibody:
   - Based on an early version of the program where all bodies exert and are affected by gravity
