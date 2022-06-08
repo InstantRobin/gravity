@@ -25,7 +25,7 @@ As of the current version, stars are stationary, and satellites do not exert gra
 ### How to Run:
 
 - Requires Java JDK + JRE 16
-- Run gravity.jar inside /out/artifacts/gravity_jar with java
+- Use "java -jar" command to run gravity.jar found in latest github release, or from /out/artifacts/gravity_jar
 
 ### Branches:
 - Multibody:
