@@ -91,21 +91,12 @@ public class Satellite extends GravBod {
         Point2D starNormalVec = new Point2D.Double((x-star.getX()) / star.getRad(),
                                                    (y-star.getY()) / star.getRad());
 
-        // normMag is the magnitude of the normal vector, is used to normalize starNormalVec
-        // normalizing a normal vector gives us the unit normal vector
-        // they really need new terms for this stuff
-        double normMag = sqrt(starNormalVec.getX() * starNormalVec.getX()
-                            + starNormalVec.getY() * starNormalVec.getY());
-
-        Point2D unitNormVec = new Point2D.Double(starNormalVec.getX() / normMag,
-                                                 starNormalVec.getY() / normMag);
-
         // 2(d*n) where d is satVec and n is unitNormalVec
-        double dotProd = 2 * (satVec.getX() * unitNormVec.getX()
-                            + satVec.getY() * unitNormVec.getY());
+        double dotProd = 2 * (satVec.getX() * starNormalVec.getX()
+                            + satVec.getY() * starNormalVec.getY());
         // 2(d*n)n
-        Point2D res = new Point2D.Double(dotProd * unitNormVec.getX(),
-                                         dotProd * unitNormVec.getY());
+        Point2D res = new Point2D.Double(dotProd * starNormalVec.getX(),
+                                         dotProd * starNormalVec.getY());
 
         // d - 2(d*n)n, as well as momentum loss on each bounce
         dx = ELASTICITY * (satVec.getX() - res.getX());
